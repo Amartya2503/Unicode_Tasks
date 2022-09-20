@@ -11,12 +11,17 @@ import requests
 #this function is used to carry out task 3:
 
 def task(request):
-    res={ }
+    res=[]
     
     if request.method == "POST":
+
+        #storing the recieved input from form in variable id
+
         id= request.POST.get('id')
         
         url = "https://twitter154.p.rapidapi.com/user/id"
+
+        #passing the variable to querrystring
 
         querystring = {"user_id": id}
 
@@ -25,9 +30,13 @@ def task(request):
 	         "X-RapidAPI-Host": "twitter154.p.rapidapi.com"
         }
 
-        response = requests.request("GET", url, headers=headers, params=querystring)
-        res=response
-        return HttpResponse(res)
+        response = requests.request("GET", url, headers=headers, params=querystring).json()
+        user_name= response['username']
+        userid= response['user_id']
+        # user_name= res['username']
+        # userid= res['user_id']
+        res=["user name:",user_name," |user id:",userid]
+        return HttpResponse(res) 
            
     return render(request, 'form.html')
 #can a view function only return one thng at the time of implimentation ?    
