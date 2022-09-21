@@ -1,3 +1,4 @@
+from multiprocessing import context
 from django.shortcuts import render, HttpResponse
 import requests
 
@@ -11,7 +12,7 @@ import requests
 #this function is used to carry out task 3:
 
 def task(request):
-    res=[]
+    
     
     if request.method == "POST":
 
@@ -33,10 +34,13 @@ def task(request):
         response = requests.request("GET", url, headers=headers, params=querystring).json()
         user_name= response['username']
         userid= response['user_id']
-        # user_name= res['username']
-        # userid= res['user_id']
-        res=["user name:",user_name," |user id:",userid]
-        return HttpResponse(res) 
+        context = {
+            'variable1' : id,
+            'variable2' : user_name
+        }
+
+        return render(request, 'form.html', context)
+        
            
     return render(request, 'form.html')
 #can a view function only return one thng at the time of implimentation ?    
