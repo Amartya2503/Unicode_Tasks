@@ -15,38 +15,60 @@ def task_3(request):
     
     
     if request.method == "POST":
-
+        #try except used to avoid getting error page in case we get error page we print user not found
         #storing the recieved input from form in variable id
-
-        id= request.POST.get('id')
+        try:
+            
+            id= request.POST.get('id')
         
-        url = "https://twitter154.p.rapidapi.com/user/id"
+            url = "https://twitter154.p.rapidapi.com/user/id"
 
-        #passing the variable to querrystring
+            #passing the variable to querrystring
 
-        querystring = {"user_id": id}
+            querystring = {"user_id": id}
 
-        headers = {
-	         "X-RapidAPI-Key": "cb090dec35mshc902f52340f3319p1db9a8jsn2928a586b761",
-	         "X-RapidAPI-Host": "twitter154.p.rapidapi.com"
-        }
+            headers = {
+	            "X-RapidAPI-Key": "14e110ca3cmsh4c44c7fb60b8f0bp1e963cjsn869c8b704bc3",
+	            "X-RapidAPI-Host": "twitter154.p.rapidapi.com"
+            }
 
-        response = requests.request("GET", url, headers=headers, params=querystring).json()
-        user_name= response['username'] 
-        userid= response['user_id']
-        context = {
-            'variable1' : id,
-            'variable2' : user_name
-        }
 
-        #sending the data to database
-        detail= details(Username = user_name, Userid= id)
-        detail.save()
+            response = requests.request("GET", url, headers=headers, params=querystring).json()
+            user_name= response['username'] 
+            userid= response['user_id']
+            try:
+            
+                details.objects.filter(Username= user_name).get()
 
-        return render(request, 'form.html', context)
-        
-           
-    return render(request, 'form.html')
+                context = {
+                    'variable1' : id,
+                    'variable2' : user_name
+                }
+                return render(request, 'form.html', context)
+            except:
+
+            
+
+                context = {
+                    'variable1' : id,
+                    'variable2' : user_name
+                }
+
+                #sending the data to database
+
+                detail= details(Username = user_name, Userid= id)
+                detail.save()
+
+                return render(request, 'form.html', context)
+        except KeyError:
+
+            context = {
+                    'variable1' : id,
+                    'variable2' : "User not found"
+                }
+            return render(request, 'form.html', context)
+    else:
+        return render(request, 'form.html')
 #can a view function only return one thng at the time of implimentation ?    
 
 #view for qurrying database using user input:
