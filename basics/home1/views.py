@@ -117,8 +117,19 @@ def querry(request):
 #now we create a view to display top 3 entries from database
 
 def top_3(request):
-    users= details.objects.all()
+    x= { }
+    users= details.objects.all().order_by('-Counter')
+    
     print(users)
-    return HttpResponse("this page displays top 3")
+    for i in users:
+        C_ount=details.objects.get(Username= i)
+        # print(C_ount.Counter)
+       
+        x[i.Username] = C_ount.Counter
+     
+    context={
+        'var':x
+        }
+    return render(request, 'top3.html', context)
     
 

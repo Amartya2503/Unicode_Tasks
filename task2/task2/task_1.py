@@ -7,17 +7,18 @@
 # for i in range(u_rg, l_rg+1):
 #     print(binary(i))
 #creating dictionary :) :
-from re import A
+# from re import A
 
 
 def my_task(u_rg, l_rg) :
-
     res={ }
+    binary={ }
     flag=0
     for i in range(u_rg, l_rg+1):
-        j=bin(i)
-        m=int(j[2:])
-        for k in range(0,len(j)):
+        # j=bin(i)
+        binary[i] = bin(i)   
+        m=int(bin(i)[2:])
+        for k in range(0,m):
             
         
             if (m%2 != 0):
@@ -33,5 +34,5 @@ def my_task(u_rg, l_rg) :
             m=int(m/10)
     
     
-    return str(res)
+    return [res, binary]
 

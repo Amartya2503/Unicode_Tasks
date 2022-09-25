@@ -11,16 +11,16 @@ from task2 import task_1
 
 def task(request, range1, range2):
     x= task_1.my_task(range1, range2)
-    return HttpResponse(x)
+    context={
+        'variable1': x[0],
+        'variable2' : x[1]
+    }
+    return render(request, 'view.html' , context)
+
+
+  #tested dynamic urs with this functrion:  
 def index(request, demand):
     if demand == 'about':
         return HttpResponse('this is the about page')
-    # elif demand == 'contacts':
-    #     return HttpResponse('this is the contacts page')
-    # elif demand == 'services':
-    #     return HttpResponse('this is the services page')
-    # elif demand == 'result':
-    #     x= task_1.my_task()
- 
-    #     return HttpResponse(x)
+
         
