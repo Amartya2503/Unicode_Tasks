@@ -1,7 +1,9 @@
 from multiprocessing import context
+from typing import Counter
 from django.shortcuts import render, HttpResponse
 import requests
 from .models import details
+from django.core.exceptions import ObjectDoesNotExist
 # Create your views here.
 
 #thid code was written to check the server before starting task_3:
@@ -16,9 +18,10 @@ def task_3(request):
     
     if request.method == "POST":
         #try except used to avoid getting error page in case we get error page we print user not found
-        #storing the recieved input from form in variable id
+        
         try:
-            
+
+           #storing the recieved input from form in variable id 
             id= request.POST.get('id')
         
             url = "https://twitter154.p.rapidapi.com/user/id"
@@ -47,8 +50,6 @@ def task_3(request):
                 return render(request, 'form.html', context)
             except:
 
-            
-
                 context = {
                     'variable1' : id,
                     'variable2' : user_name
@@ -56,7 +57,7 @@ def task_3(request):
 
                 #sending the data to database
 
-                detail= details(Username = user_name, Userid= id)
+                detail= details(Username = user_name, Userid= id , Counter=0)
                 detail.save()
 
                 return render(request, 'form.html', context)
@@ -78,21 +79,46 @@ def querry(request):
         id = request.POST.get('id')
         try:
 
-            U_name = details.objects.filter(Userid= id)
+            User = details.objects.get(Userid = id)
+            
             context = {
                 'variable1' : id,
-                'variable2' : U_name[0]
+                'variable2' : User
             }
-        
+            
+            print(User.Counter) 
+            User.Counter += 1
+            User.save()    
+                                           
             return render(request, 'Querry.html', context)
+      #this except takes care if get can not find the data in the data base
+        except ObjectDoesNotExist:
 
-        except IndexError:
             context={
                 'variable1' : id,
-                'variable2' : "User Not Found"
+                'variable2' : "User Not Found "
             }
             return render(request, 'Querry.html', context)
+            
+            
+      #this exception block takes care of invalid inputs such as alphabets or blank spaces
+
+        except ValueError:
+            context={
+                'variable1' : "please enter a valid input",
+                'variable2' : " "
+            }
+            return render(request, 'Querry.html', context)
+            
 
     else :
         return render(request, 'Querry.html')
-        
+
+#now we create a view to display top 3 entries from database
+
+def top_3(request):
+    users= details.objects.all()
+    print(users)
+    return HttpResponse("this page displays top 3")
+    
+

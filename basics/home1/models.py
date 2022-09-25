@@ -4,7 +4,7 @@ from django.db import models
 class details(models.Model)  :
     Username = models.CharField(max_length=122)
     Userid = models.IntegerField()
-    Count = models.IntegerField(default= 0)
+    Counter = models.IntegerField(default= 0)
 
     def __str__(self):
 
