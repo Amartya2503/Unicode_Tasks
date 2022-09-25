@@ -122,13 +122,16 @@ def top_3(request):
     
     print(users)
     for i in users:
-        C_ount=details.objects.get(Username= i)
+        C_ount=details.objects.get(Username= i.Username)
         # print(C_ount.Counter)
        
         x[i.Username] = C_ount.Counter
-     
+    print(x) 
     context={
-        'var':x
+
+        'variable1':users[0],
+        'variable2' :users[1],
+        'variable3':users[2]
         }
     return render(request, 'top3.html', context)
     
